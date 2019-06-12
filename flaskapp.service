@@ -1,0 +1,14 @@
+[Unit]
+Description=Basic flask app to show off PKG Deploy
+After=network.target
+
+[Service]
+User=pkgdeploy
+Group=pkgdeploy
+WorkingDirectory=/opt/pkgdeploy/flaskapp
+Environment="PATH=/opt/pkgdeploy/flaskapp/venv/bin"
+ExecStart=/opt/pkgdeploy/flaskapp/venv/bin/gunicorn --bind unix:flaskapp.sock --workers 4 flaskapp.wsgi:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

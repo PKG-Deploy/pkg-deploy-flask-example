@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="shortcut icon">
+    <title>PKG Deploy Flask Example | {% block title %}{% endblock title %}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" media="all">
+</head>
+<body>
+  <div id="wrapper">
+    <header>
+      <img id="logo" src="{{ url_for('static', filename='img/logo.png') }}" alt="PKG Deploy logo">
+      <h1>PKG Deploy Flask Example</h1>
+    </header>
+    <main>
+      <div id="content">
+        {% block content %}{% endblock content %}
+      </div>
+    </main>
+  </div>
+</body>
+</html>

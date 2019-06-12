@@ -1,0 +1,45 @@
+name: pkgdeploy-flaskapp
+format: rpm
+distribution: centos7
+architecture: 64-bit
+description: A simple flask project to show how PKG Deploy works
+url: https://www.pkgdeploy.com
+license: GPLv3
+maintainer: PKG Deploy Devs <devs@pkgdeploy.com>
+
+build:
+  directory: /opt/pkgdeploy/flaskapp/
+  requires:
+    - python36-pip
+  commands: |
+    python3.6 -m venv ./venv/
+    ./venv/bin/pip install -r requirements.txt
+
+install:
+  requires:
+    - python36
+    - nginx
+  user: pkgdeploy
+  group: pkgdeploy
+  copy:
+    - source: ./
+      destination: /opt/pkgdeploy/flaskapp/
+      user: pkgdeploy
+      group: pkgdeploy
+      permissions: 755
+    - source: nginx.conf
+      destination: /etc/nginx/conf.d/flaskapp.conf
+    - source: flaskapp.service
+      destination: /etc/systemd/system/flaskapp.service
+
+after_install: |
+  # Configure Nginx
+  rm -f /etc/nginx/conf.d/default.conf
+  sed -i '/listen       80 default_server/d' /etc/nginx/nginx.conf
+  systemctl enable --now nginx
+  nginx -s reload
+  # Start app
+  systemctl enable --now flaskapp
+
+after_upgrade:
+  - file: .pkgdeploy/upgrade_commands.sh
